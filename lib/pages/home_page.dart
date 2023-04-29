@@ -3,20 +3,89 @@ import 'package:flutter_module8_assignment/constants.dart';
 import 'package:flutter_module8_assignment/pages/event_detail_page.dart';
 import 'package:flutter_module8_assignment/resources/colors.dart';
 import 'package:flutter_module8_assignment/resources/dimens.dart';
+import 'package:flutter_module8_assignment/widgets/delay_circular_progress_indicator.dart';
 import 'package:flutter_module8_assignment/widgets/time_and_event_list_custom_layout.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../widgets/my_patients_horizontal_list_view.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  List<Events> listOfEvents = [
+    Events(startTime: "08:00",endTime: "08:30", eventName: "Event 1", currentTimeFlag: true),
+    Events(startTime: "09:00",endTime: "09:30", eventName: "Event 2", currentTimeFlag: false),
+    Events(startTime: "10:00",endTime: "10:30", eventName: "Event 3", currentTimeFlag: false),
+    Events(startTime: "11:00",endTime: "11:30", eventName: "Event 4", currentTimeFlag: false),
+    Events(startTime: "12:00",endTime: "12:30", eventName: "Event 5", currentTimeFlag: false),
+    Events(startTime: "13:00",endTime: "13:30", eventName: "Event 6", currentTimeFlag: false),
+    Events(startTime: "14:00",endTime: "14:30", eventName: "Event 7", currentTimeFlag: false),
+    Events(startTime: "15:00",endTime: "15:30", eventName: "Event 8", currentTimeFlag: false),
+    Events(startTime: "16:00",endTime: "16:30", eventName: "Event 9", currentTimeFlag: false),
+    Events(startTime: "17:00",endTime: "17:30", eventName: "Event 10", currentTimeFlag: false),
+    Events(startTime: "18:00",endTime: "18:30", eventName: "Event 11", currentTimeFlag: false),
+    Events(startTime: "19:00",endTime: "19:30", eventName: "Event 12", currentTimeFlag: false),
+    Events(startTime: "20:00",endTime: "20:30", eventName: "Event 13", currentTimeFlag: false)
+  ];
+
+  List<Events> listOfEventsNew = [];
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Events> listOfEvents = [
-      Events(startTime: "08:00",endTime: "08:30", eventName: "Event 1", currentTimeFlag: true),
-      Events(startTime: "09:00",endTime: "09:30", eventName: "Event 2", currentTimeFlag: false),
-      Events(startTime: "10:00",endTime: "10:30", eventName: "Event 3", currentTimeFlag: false),
-      Events(startTime: "11:00",endTime: "11:30", eventName: "Event 4", currentTimeFlag: false),
-    ];
 
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+    int minutes = now.minute;
+
+
+    for(int i = 0; i< widget.listOfEvents.length;i++)
+
+    {
+      List<String> startTimeSplitData =  widget.listOfEvents[i].startTime.split(":");
+      String startTimeHourData = startTimeSplitData.first;
+      String startTimeMinuteData = startTimeSplitData.last;
+
+      List<String> endTimeSplitData =  widget.listOfEvents[i].endTime.split(":");
+      String endTimeHourData = endTimeSplitData.first;
+      String endTimeMinuteData = endTimeSplitData.last;
+
+
+// Define the time range from 10:30 AM to 11:00 AM
+      TimeOfDay rangeStart = TimeOfDay(hour: int.parse(startTimeHourData), minute: int.parse(startTimeMinuteData));
+      TimeOfDay rangeEnd = TimeOfDay(hour: int.parse(endTimeHourData), minute: int.parse(endTimeMinuteData));
+
+// Convert current time to TimeOfDay object
+      TimeOfDay currentTime = TimeOfDay.fromDateTime(now);
+
+// Check if current time is within the specified range
+      //  bool isInRange = ((currentTime >= rangeStart) && (currentTime <= rangeEnd));
+      // bool isInRange = (int.parse(startTimeHourData) >= hour && int.parse(endTimeHourData) <= hour);
+      bool isInRange = (hour > int.parse(startTimeHourData));
+// Output the result
+      if (isInRange) {
+        print('The current time is within the specified range.');
+        widget.listOfEventsNew.add(Events(startTime: widget.listOfEvents[i].startTime,
+            endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: true));
+        //  widget.listOfEvents[i].currentTimeFlag = true;
+        // break;
+
+      } else {
+        print('The current time is not within the specified range.');
+        widget.listOfEventsNew.add(Events(startTime: widget.listOfEvents[i].startTime,
+            endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: false));
+        // widget.listOfEvents[i].currentTimeFlag = false;
+      }
+
+    }
     return Scaffold(
         body: Stack(
       children: <Widget>[
@@ -65,7 +134,7 @@ class HomePage extends StatelessWidget {
                 child: MyPatientsHorizontalListView(
                   backgroundColor: Color.fromRGBO(26, 105, 198, 1),
                   isDetailFlag: false,
-                  listOfMyPatient: listOfPatients,
+                  listOfMyPatient: listOfPatients
                 ),
               ),
               Row(
@@ -91,10 +160,36 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              Expanded(child: TimeAndEventListCustomLayout(listOfEvents: listOfEvents,
+              Expanded(child: TimeAndEventListCustomLayout(listOfEvents: widget.listOfEventsNew,
               onTapEvent: (){
                 navigateToEventDetailScreen(context);
-              },))
+              },
+                onLoadMoreEvent: (){
+                return Fluttertoast.showToast(
+                  msg: 'Load More Event Trigger',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.SNACKBAR,
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+                },
+                onRefreshEvent: (){
+                  print("onRefresh");
+                 return DelayedCircularProgressIndicator(delay: 3000,);
+                },
+                onEmptyView: (){
+                  return Fluttertoast.showToast(
+                    msg: 'Empty Event',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.SNACKBAR,
+                    backgroundColor: Colors.black,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                },
+
+              ))
             ],
           ),
         )
@@ -108,7 +203,6 @@ class HomePage extends StatelessWidget {
       MaterialPageRoute(builder: (context) => EventDetailPage()),
     );
   }
-
 }
 
 class MyPatientsView extends StatelessWidget {

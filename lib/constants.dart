@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Events {
-  final String startTime;
-  final String endTime;
-  final String eventName;
-  final bool currentTimeFlag;
+   String startTime;
+   String endTime;
+   String eventName;
+   bool currentTimeFlag;
 
   Events({required this.startTime,required this.endTime,
     required this.eventName, required this.currentTimeFlag});
@@ -29,13 +29,16 @@ class MyPatient {
 
 }
 
+/*
 final List<Events> listOfEvents = [
   Events(startTime: "8:00pm",endTime: "8:30pm", eventName: "Event 1", currentTimeFlag: true),
   Events(startTime: "9:00pm",endTime: "9:30pm", eventName: "Event 2", currentTimeFlag: false),
   Events(startTime: "10:00pm",endTime: "10:30pm", eventName: "Event 3", currentTimeFlag: false),
   Events(startTime: "11:00pm",endTime: "11:30pm", eventName: "Event 4", currentTimeFlag: false),
-];
+  Events(startTime: "11:00pm",endTime: "11:30pm", eventName: "Event 4", currentTimeFlag: false),
 
+];
+*/
 final List<MyPatient> listOfPatients = [
   MyPatient(title: "Office No.248", timeRange: "8:30AM - 02:00PM", eventTitle: "Teeth Drilling", eventDescription: "A dental drill or handpiece is a hand-held, mechanical instrument used to perform a variety of common dental procedures, including removing decay, polishing fillings, performing cosmetic dentistry, and altering prostheses. The handpiece itself consists of internal mechanical components which initiate a rotational force and provide power to the cutting instrument, usually a dental burr. ", patientProfile: 'assets/profile_sample.jpg', patientName: "Alex"),
   MyPatient(title: "Office No.248", timeRange: "9:30AM - 03:00PM", eventTitle: "Teeth Drilling", eventDescription: "A dental drill or handpiece is a hand-held, mechanical instrument used to perform a variety of common dental procedures, including removing decay, polishing fillings, performing cosmetic dentistry, and altering prostheses. The handpiece itself consists of internal mechanical components which initiate a rotational force and provide power to the cutting instrument, usually a dental burr. ", patientProfile: 'assets/profile_sample.jpg', patientName: "Alexander"),
@@ -43,6 +46,7 @@ final List<MyPatient> listOfPatients = [
   MyPatient(title: "Office No.248", timeRange: "11:30AM - 05:00PM", eventTitle: "Teeth Drilling", eventDescription: "A dental drill or handpiece is a hand-held, mechanical instrument used to perform a variety of common dental procedures, including removing decay, polishing fillings, performing cosmetic dentistry, and altering prostheses. The handpiece itself consists of internal mechanical components which initiate a rotational force and provide power to the cutting instrument, usually a dental burr. ", patientProfile: 'assets/profile_sample.jpg', patientName: "Alex"),
   MyPatient(title: "Office No.248", timeRange: "12:30AM - 06:00PM", eventTitle: "Teeth Drilling", eventDescription: "A dental drill or handpiece is a hand-held, mechanical instrument used to perform a variety of common dental procedures, including removing decay, polishing fillings, performing cosmetic dentistry, and altering prostheses. The handpiece itself consists of internal mechanical components which initiate a rotational force and provide power to the cutting instrument, usually a dental burr. ", patientProfile: 'assets/profile_sample.jpg', patientName: "Alex"),
 ];
+
 
 
 List<String>  testFunction() {

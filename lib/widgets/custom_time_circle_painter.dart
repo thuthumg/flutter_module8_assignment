@@ -11,7 +11,7 @@ class CustomTimeCirclePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 25;
 
-    Paint innerCirclePaint = Paint()
+    Paint innerCirclePaint1 = Paint()
       ..color = Color.fromRGBO(28, 94, 186, 1)
       ..style = PaintingStyle.fill;
 
@@ -23,13 +23,13 @@ class CustomTimeCirclePainter extends CustomPainter {
     double centerX = size.width / 2;
     double centerY = size.height / 2;
     double outerRadius = size.width / 2 - 10;
-    double innerRadius = size.width / 2.2;
+    double innerRadius1 = size.width / 2.2;
     double innerRadius2 = size.width / 4.2;
   //  canvas.drawCircle(Offset(centerX, centerY), outerRadius, outerCirclePaint);
   //  canvas.drawCircle(Offset(centerX, centerY), innerRadius, innerCirclePaint);
 
     canvas.drawCircle(Offset(centerX, centerY), outerRadius, outerCirclePaint);
-    canvas.drawCircle(Offset(centerX, centerY), innerRadius, innerCirclePaint);
+    canvas.drawCircle(Offset(centerX, centerY), innerRadius1, innerCirclePaint1);
     canvas.drawCircle(Offset(centerX, centerY), innerRadius2, innerCirclePaint2);
 
 

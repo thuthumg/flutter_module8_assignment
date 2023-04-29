@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
+
 class DottedLine extends StatelessWidget {
   final double height;
   final Color color;
   final double strokeWidth;
   final bool dashLineFlag;
+  final bool currentTimeStatus;
 
-  DottedLine({this.height = 100, this.color = Colors.grey, this.strokeWidth = 1, this.dashLineFlag = false});
+  DottedLine({this.height = 100,
+    this.color = Colors.grey,
+    this.strokeWidth = 1,
+    this.dashLineFlag = false,
+    this.currentTimeStatus = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
       child: CustomPaint(
-        painter: DottedLinePainter(color: color, strokeWidth: strokeWidth,dashLineFlag: dashLineFlag ),
+        painter: DottedLinePainter(
+            color: color, strokeWidth: strokeWidth, dashLineFlag: dashLineFlag,
+            currentTimeStatus: currentTimeStatus),
       ),
     );
   }
@@ -22,29 +30,28 @@ class DottedLinePainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
   final bool dashLineFlag;
+  final bool currentTimeStatus;
 
-  DottedLinePainter({this.color = Colors.grey, this.strokeWidth = 1, this.dashLineFlag = false });
+  DottedLinePainter({this.color = Colors.grey,
+    this.strokeWidth = 1,
+    this.dashLineFlag = false,
+  this.currentTimeStatus = false});
 
   @override
   void paint(Canvas canvas, Size size) {
-
-    if(dashLineFlag == true)
-    activeDrawLine(canvas,size);
+    if (dashLineFlag == true)
+      activeDrawLine(canvas, size,currentTimeStatus);
     else
-    inActiveDrawLine(canvas,size);
-
-
+      inActiveDrawLine(canvas, size);
   }
 
   @override
   bool shouldRepaint(DottedLinePainter oldDelegate) {
-   // return oldDelegate.color != color || oldDelegate.strokeWidth != strokeWidth;
+    // return oldDelegate.color != color || oldDelegate.strokeWidth != strokeWidth;
     return false;
   }
 
-  void activeDrawLine(Canvas canvas, Size size)
-  {
-
+  void activeDrawLine(Canvas canvas, Size size, bool currentTimeStatus) {
     Paint linePaint = Paint()
       ..color = Colors.blue
       ..strokeWidth = 2.0
@@ -71,8 +78,12 @@ class DottedLinePainter extends CustomPainter {
         linePaint,
       );
     }
-
+   /* if(currentTimeStatus == true)
+      {
+        canvas.drawCircle(Offset(centerX, endY), 5, circlePaint);
+      }*/
     canvas.drawCircle(Offset(centerX, endY), 5, circlePaint);
+
   }
 
   void inActiveDrawLine(Canvas canvas, Size size) {
@@ -88,7 +99,7 @@ class DottedLinePainter extends CustomPainter {
 
     double startY = 0.0;
     while (startY < size.height) {
-      canvas.drawLine(Offset(0, startY), Offset(0, startY  + dashWidth), paint);
+      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashWidth), paint);
       startY += dashWidth;
     }
   }

@@ -5,39 +5,89 @@ import 'package:flutter_module8_assignment/resources/colors.dart';
 import 'package:flutter_module8_assignment/resources/dimens.dart';
 import 'package:flutter_module8_assignment/widgets/dashed_divider_view.dart';
 
-class TimeAndEventListCustomLayout extends StatelessWidget {
+class TimeAndEventListCustomLayout extends StatefulWidget {
 
   List<Events> listOfEvents;
-
   final Function onTapEvent;
+  final Function onLoadMoreEvent;
+  final Function onRefreshEvent;
+  final Function onEmptyView;
 
 
   TimeAndEventListCustomLayout({
    required this.listOfEvents,
-    required this.onTapEvent
+    required this.onTapEvent,
+    required this.onLoadMoreEvent,
+    required this.onRefreshEvent,
+    required this.onEmptyView
   });
 
   @override
-  Widget build(BuildContext context) {
-    return
-      Container(
-        margin: EdgeInsets.only(bottom: 30),
-        height: MediaQuery.of(context).size.height,
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: listOfEvents.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                    onTap: (){
-                      onTapEvent();
-                    },
-                    child: TimeAndEventListEachItem(eventsItem: listOfEvents[index],));
-              }),
-        ),
-      );
+  State<TimeAndEventListCustomLayout> createState() => _TimeAndEventListCustomLayoutState();
+}
 
+class _TimeAndEventListCustomLayoutState extends State<TimeAndEventListCustomLayout> {
+  var _scrollController = ScrollController();
+  Future<void> _pullRefresh() async {
+   // List<String> freshNumbers = await NumberGenerator().slowNumbers();
+    setState(() {
+     // numbersList = freshNumbers;
+      widget.onRefreshEvent();
+    });
+    // why use freshNumbers var? https://stackoverflow.com/a/52992836/2301224
+  }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if(_scrollController.position.atEdge){
+        if(_scrollController.position.pixels == 0)
+        {
+          print("Start of the list reached");
+        }else{
+          print("End of the list reached");
+          widget.onLoadMoreEvent();
+        }
+      }
+    });
+
+
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    if(widget.listOfEvents.length == 0)
+      {
+        widget.onEmptyView();
+        return Container();
+      }else{
+      return
+        RefreshIndicator(
+          onRefresh: _pullRefresh,
+          child:
+          Container(
+            margin: EdgeInsets.only(bottom: 30),
+            height: MediaQuery.of(context).size.height,
+            child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.vertical,
+                itemCount: widget.listOfEvents.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                      onTap: (){
+                        widget.onTapEvent();
+                      },
+                      child: TimeAndEventListEachItem(eventsItem: widget.listOfEvents[index],));
+                }),
+          ),
+        );
+    }
   }
 }
 
@@ -50,6 +100,34 @@ class TimeAndEventListEachItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool currentCircleState = false;
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+
+    List<String> startTimeSplitData =  eventsItem.startTime.split(":");
+    String startTimeHourData = startTimeSplitData.first;
+
+
+    List<String> endTimeSplitData =  eventsItem.endTime.split(":");
+    String endTimeHourData = endTimeSplitData.first;
+
+
+
+    bool isInRange = (int.parse(startTimeHourData) >= hour && int.parse(endTimeHourData) <= hour);
+
+    print("check time range = $isInRange");
+
+    if(isInRange)
+
+      {
+        currentCircleState = true;
+      }else{
+      currentCircleState = false;
+    }
+
+
+
     return Column(
       children: [
         Container(
@@ -60,7 +138,7 @@ class TimeAndEventListEachItem extends StatelessWidget {
             children: [
               TimeView(eventsItem: eventsItem,),
               SizedBox(width: MARGIN_MEDIUM,),
-              TimeLineView(activeTimeLineFlag: eventsItem.currentTimeFlag,),
+              TimeLineView(activeTimeLineFlag: eventsItem.currentTimeFlag,currentTimeStatus: currentCircleState),
               SizedBox(width: MARGIN_MEDIUM,),
               EventItemView(eventsItem: eventsItem,)
             ],
@@ -159,9 +237,11 @@ class EventItemView extends StatelessWidget {
 class TimeLineView extends StatelessWidget {
 
   bool activeTimeLineFlag;
+  bool currentTimeStatus;
 
   TimeLineView({
-    required this.activeTimeLineFlag
+    required this.activeTimeLineFlag,
+    required this.currentTimeStatus
   });
 
   @override
@@ -177,7 +257,7 @@ class TimeLineView extends StatelessWidget {
           painter: DottedLinePainter2(),
           size: Size(50, 200),
         )*/
-          DottedLine(height: 100, color: Colors.black26, strokeWidth: 1,dashLineFlag: false,),
+          DottedLine(height: 100, color: Colors.black26, strokeWidth: 1,dashLineFlag: false,currentTimeStatus: false,),
       ) :
        Container(
         width: 0.3,
@@ -185,7 +265,7 @@ class TimeLineView extends StatelessWidget {
         //  child:Image.asset("assets/images/dotted_line.png"),
         child: Stack(
           children: [
-            DottedLine(height: 100, color: Colors.blue, strokeWidth: 1,dashLineFlag: true,),
+            DottedLine(height: 100, color: Colors.blue, strokeWidth: 1,dashLineFlag: true,currentTimeStatus: currentTimeStatus,),
             // Align(
             //   alignment: Alignment.bottomLeft,
             //     child: Icon(Icons.circle,color: Colors.blue,size: 10,))
