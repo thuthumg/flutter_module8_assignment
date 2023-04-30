@@ -5,13 +5,13 @@ class DottedLine extends StatelessWidget {
   final Color color;
   final double strokeWidth;
   final bool dashLineFlag;
-  final bool currentTimeStatus;
+  final bool isBreakPoint;
 
   DottedLine({this.height = 100,
     this.color = Colors.grey,
     this.strokeWidth = 1,
     this.dashLineFlag = false,
-    this.currentTimeStatus = false});
+    this.isBreakPoint = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class DottedLine extends StatelessWidget {
       child: CustomPaint(
         painter: DottedLinePainter(
             color: color, strokeWidth: strokeWidth, dashLineFlag: dashLineFlag,
-            currentTimeStatus: currentTimeStatus),
+            isBreakPoint: isBreakPoint),
       ),
     );
   }
@@ -30,17 +30,17 @@ class DottedLinePainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
   final bool dashLineFlag;
-  final bool currentTimeStatus;
+  final bool isBreakPoint;
 
   DottedLinePainter({this.color = Colors.grey,
     this.strokeWidth = 1,
     this.dashLineFlag = false,
-  this.currentTimeStatus = false});
+  this.isBreakPoint = false});
 
   @override
   void paint(Canvas canvas, Size size) {
     if (dashLineFlag == true)
-      activeDrawLine(canvas, size,currentTimeStatus);
+      activeDrawLine(canvas, size,isBreakPoint);
     else
       inActiveDrawLine(canvas, size);
   }
@@ -58,9 +58,9 @@ class DottedLinePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
-      ..isAntiAlias = true
-      ..shader = null
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 1.0);
+      ..isAntiAlias = true;
+     // ..shader = null
+     // ..maskFilter = MaskFilter.blur(BlurStyle.normal, 1.0);
 
     Paint circlePaint = Paint()
       ..color = Colors.blue
@@ -78,11 +78,17 @@ class DottedLinePainter extends CustomPainter {
         linePaint,
       );
     }
-   /* if(currentTimeStatus == true)
+    if(isBreakPoint == true)
       {
         canvas.drawCircle(Offset(centerX, endY), 5, circlePaint);
-      }*/
-    canvas.drawCircle(Offset(centerX, endY), 5, circlePaint);
+      }else{
+      canvas.drawLine(
+        Offset(centerX, endY),
+        Offset(centerX, endY + 13),
+        linePaint,
+      );
+    }
+
 
   }
 

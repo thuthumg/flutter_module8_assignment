@@ -11,19 +11,19 @@ import '../widgets/my_patients_horizontal_list_view.dart';
 
 class HomePage extends StatefulWidget {
   List<Events> listOfEvents = [
-    Events(startTime: "08:00",endTime: "08:30", eventName: "Event 1", currentTimeFlag: true),
-    Events(startTime: "09:00",endTime: "09:30", eventName: "Event 2", currentTimeFlag: false),
-    Events(startTime: "10:00",endTime: "10:30", eventName: "Event 3", currentTimeFlag: false),
-    Events(startTime: "11:00",endTime: "11:30", eventName: "Event 4", currentTimeFlag: false),
-    Events(startTime: "12:00",endTime: "12:30", eventName: "Event 5", currentTimeFlag: false),
-    Events(startTime: "13:00",endTime: "13:30", eventName: "Event 6", currentTimeFlag: false),
-    Events(startTime: "14:00",endTime: "14:30", eventName: "Event 7", currentTimeFlag: false),
-    Events(startTime: "15:00",endTime: "15:30", eventName: "Event 8", currentTimeFlag: false),
-    Events(startTime: "16:00",endTime: "16:30", eventName: "Event 9", currentTimeFlag: false),
-    Events(startTime: "17:00",endTime: "17:30", eventName: "Event 10", currentTimeFlag: false),
-    Events(startTime: "18:00",endTime: "18:30", eventName: "Event 11", currentTimeFlag: false),
-    Events(startTime: "19:00",endTime: "19:30", eventName: "Event 12", currentTimeFlag: false),
-    Events(startTime: "20:00",endTime: "20:30", eventName: "Event 13", currentTimeFlag: false)
+    Events(startTime: "08:00",endTime: "08:30", eventName: "Event 1", currentTimeFlag: true,isBreakPoint: false),
+    Events(startTime: "09:00",endTime: "09:30", eventName: "Event 2", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "10:00",endTime: "10:30", eventName: "Event 3", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "11:00",endTime: "11:30", eventName: "Event 4", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "12:00",endTime: "12:30", eventName: "Event 5", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "13:00",endTime: "13:30", eventName: "Event 6", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "14:00",endTime: "14:30", eventName: "Event 7", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "15:00",endTime: "15:30", eventName: "Event 8", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "16:00",endTime: "16:30", eventName: "Event 9", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "17:00",endTime: "17:30", eventName: "Event 10", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "18:00",endTime: "18:30", eventName: "Event 11", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "19:00",endTime: "19:30", eventName: "Event 12", currentTimeFlag: false,isBreakPoint: false),
+    Events(startTime: "20:00",endTime: "20:30", eventName: "Event 13", currentTimeFlag: false,isBreakPoint: false)
   ];
 
   List<Events> listOfEventsNew = [];
@@ -34,13 +34,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
 
     DateTime now = DateTime.now();
     int hour = now.hour;
@@ -69,23 +62,45 @@ class _HomePageState extends State<HomePage> {
 // Check if current time is within the specified range
       //  bool isInRange = ((currentTime >= rangeStart) && (currentTime <= rangeEnd));
       // bool isInRange = (int.parse(startTimeHourData) >= hour && int.parse(endTimeHourData) <= hour);
-      bool isInRange = (hour > int.parse(startTimeHourData));
+      bool isInRange = (hour >= int.parse(startTimeHourData));
 // Output the result
       if (isInRange) {
-        print('The current time is within the specified range.');
-        widget.listOfEventsNew.add(Events(startTime: widget.listOfEvents[i].startTime,
-            endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: true));
+        print('The current time is within the specified range. ${hour} ---- ${startTimeHourData} ');
+
+        if(hour == int.parse(startTimeHourData))
+          {
+            print('equal test');
+            widget.listOfEventsNew.add(Events(startTime: widget.listOfEvents[i].startTime,
+                endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: true,
+                isBreakPoint: true));
+          }
+
+        else{
+          print('not equal test');
+          widget.listOfEventsNew.add(Events(startTime: widget.listOfEvents[i].startTime,
+              endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: true,
+              isBreakPoint: false));
+        }
         //  widget.listOfEvents[i].currentTimeFlag = true;
         // break;
 
       } else {
         print('The current time is not within the specified range.');
         widget.listOfEventsNew.add(Events(startTime: widget.listOfEvents[i].startTime,
-            endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: false));
+            endTime: widget.listOfEvents[i].endTime, eventName: widget.listOfEvents[i].eventName, currentTimeFlag: false,
+        isBreakPoint: false));
         // widget.listOfEvents[i].currentTimeFlag = false;
       }
 
     }
+    print("check lastest array = ${widget.listOfEventsNew.toString()}");
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+
     return Scaffold(
         body: Stack(
       children: <Widget>[

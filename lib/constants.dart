@@ -5,10 +5,16 @@ class Events {
    String endTime;
    String eventName;
    bool currentTimeFlag;
+   bool isBreakPoint;
 
   Events({required this.startTime,required this.endTime,
-    required this.eventName, required this.currentTimeFlag});
+    required this.eventName, required this.currentTimeFlag,
+  required this.isBreakPoint});
 
+   @override
+  String toString() {
+    return 'Events{startTime: $startTime, endTime: $endTime, eventName: $eventName, currentTimeFlag: $currentTimeFlag, isBreakPoint: $isBreakPoint}';
+  }
 }
 
 class MyPatient {

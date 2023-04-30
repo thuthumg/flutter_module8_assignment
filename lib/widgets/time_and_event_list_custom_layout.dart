@@ -101,7 +101,7 @@ class TimeAndEventListEachItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    bool currentCircleState = false;
+   /* bool currentCircleState = false;
     DateTime now = DateTime.now();
     int hour = now.hour;
 
@@ -115,16 +115,16 @@ class TimeAndEventListEachItem extends StatelessWidget {
 
 
     bool isInRange = (int.parse(startTimeHourData) >= hour && int.parse(endTimeHourData) <= hour);
-
+    print("check time range 1 = ${int.parse(startTimeHourData)} ----- ${hour}");
+    print("check time range 2= ${int.parse(endTimeHourData)} ----- ${hour}");
     print("check time range = $isInRange");
 
     if(isInRange)
-
       {
         currentCircleState = true;
       }else{
       currentCircleState = false;
-    }
+    }*/
 
 
 
@@ -138,7 +138,7 @@ class TimeAndEventListEachItem extends StatelessWidget {
             children: [
               TimeView(eventsItem: eventsItem,),
               SizedBox(width: MARGIN_MEDIUM,),
-              TimeLineView(activeTimeLineFlag: eventsItem.currentTimeFlag,currentTimeStatus: currentCircleState),
+              TimeLineView(activeTimeLineFlag: eventsItem.currentTimeFlag,isBreakPoint: eventsItem.isBreakPoint),
               SizedBox(width: MARGIN_MEDIUM,),
               EventItemView(eventsItem: eventsItem,)
             ],
@@ -237,11 +237,11 @@ class EventItemView extends StatelessWidget {
 class TimeLineView extends StatelessWidget {
 
   bool activeTimeLineFlag;
-  bool currentTimeStatus;
+  bool isBreakPoint;
 
   TimeLineView({
     required this.activeTimeLineFlag,
-    required this.currentTimeStatus
+    required this.isBreakPoint
   });
 
   @override
@@ -257,7 +257,7 @@ class TimeLineView extends StatelessWidget {
           painter: DottedLinePainter2(),
           size: Size(50, 200),
         )*/
-          DottedLine(height: 100, color: Colors.black26, strokeWidth: 1,dashLineFlag: false,currentTimeStatus: false,),
+          DottedLine(height: 100, color: Colors.black26, strokeWidth: 1,dashLineFlag: false,isBreakPoint: isBreakPoint,),
       ) :
        Container(
         width: 0.3,
@@ -265,7 +265,7 @@ class TimeLineView extends StatelessWidget {
         //  child:Image.asset("assets/images/dotted_line.png"),
         child: Stack(
           children: [
-            DottedLine(height: 100, color: Colors.blue, strokeWidth: 1,dashLineFlag: true,currentTimeStatus: currentTimeStatus,),
+            DottedLine(height: 100, color: Colors.blue, strokeWidth: 1,dashLineFlag: true,isBreakPoint: isBreakPoint,),
             // Align(
             //   alignment: Alignment.bottomLeft,
             //     child: Icon(Icons.circle,color: Colors.blue,size: 10,))
